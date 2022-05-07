@@ -3,17 +3,23 @@ document.getElementById("convertBtn").addEventListener("click", function() {
    clickHandler();
 });
 
-
 function clickHandler() {
    const selectedFile = document.getElementById('jsonFile').files[0];
-   var fileread = new FileReader();
-   fileread.onload = function(e) {
-      var content = e.target.result;
-      var intern = JSON.parse(content); 
-      console.log(intern); 
-      displayContents(intern);
-   };
-   fileread.readAsText(selectedFile);
+   if (selectedFile) {
+         var fileread = new FileReader();
+         fileread.onload = function(e) {
+            var content = e.target.result;
+            var parsed = JSON.parse(content); 
+            //console.log(intern); 
+            displayContents(parsed);
+       };
+       fileread.readAsText(selectedFile);
+
+   } else {
+      const text = JSON.parse(document.getElementById("textarea").value)
+      displayContents(text);
+   }
+   
 }
 
 function displayContents(arr) {
