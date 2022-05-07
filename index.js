@@ -9,8 +9,8 @@ function clickHandler() {
    var fileread = new FileReader();
    fileread.onload = function(e) {
       var content = e.target.result;
-      var intern = JSON.parse(content); // parse json 
-      console.log(intern); // You can index every object
+      var intern = JSON.parse(content); 
+      console.log(intern); 
       displayContents(intern);
    };
    fileread.readAsText(selectedFile);
