@@ -22,8 +22,14 @@ function clickHandler() {
    
 }
 
+function goback() {
+   location.reload();
+}
+
 function displayContents(arr) {
+   
    document.write(`<h1 style="text-align: center; margin-top: 25px; font-family: arial;">Chat Logs</h1>`);
+   document.write(`<button style="margin-left: 25px;" type="button" onclick="goback()">Home</button>`);
    for (var i = 0; i < arr.cases.length; i++){
       document.write(`<br><br><div style="font-family: arial; background-color: #b7bcc4; margin: 0 15px 0 15px; padding: 10px; border-radius: 10px 10px 0 0;"><strong>Chat Log: ${(i+1)} </strong></div>`);
       var obj = arr.cases[i];
