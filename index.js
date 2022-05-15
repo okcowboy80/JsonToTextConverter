@@ -86,19 +86,24 @@ function displayContents(arr) {
    
    document.write(`<h1 style="text-align: center; margin-top: 25px; font-family: arial;">Chat Logs</h1>`);
    document.write(`<button style="margin-left: 25px;" type="button" onclick="goback()">Home</button>`);
-   for (var i = 0; i < arr.cases.length; i++){
-      document.write(`<br><br><div style="font-family: arial; background-color: #b7bcc4; margin: 0 15px 0 15px; padding: 10px; border-radius: 10px 10px 0 0;"><strong>Chat Log: ${(i+1)} </strong></div>`);
-      var obj = arr.cases[i];
-      for (var key in obj){
-        var value = obj[key];
-        var capitalFirst = key[0].toUpperCase();
-        if(key.toString().toLowerCase().includes("transcripts") || key.toString().toLowerCase().includes("javascript_variables") || key.toString().toLowerCase().includes("labels" ) || key.toString().toLowerCase().includes("operator_variables" )) {
-          document.write(`<div style="font-family: arial; background-color: #e6edf7; margin: 0 15px 0 15px; padding: 10px;"> * <strong>${capitalFirst + key.replaceAll("_", " ").substring(1, key.length)}</strong>: ${JSON.stringify(value)}</div>`);
-        } else {
-         document.write(`<div style="font-family: arial; background-color: #e6edf7; margin: 0 15px 0 15px; padding: 10px;"> * <strong>${capitalFirst + key.replaceAll("_", " ").substring(1, key.length)}</strong>: ${value}</div>`);
-        }
+   if(!arr.cases) {
+      document.write("<br><br><h3>No Chat Logs to display.</h3><br><h3>Ensure that you are using a chat log API .json file.</h3>")
+   } else {
+      for (var i = 0; i < arr.cases.length; i++){
+         document.write(`<br><br><div style="font-family: arial; background-color: #b7bcc4; margin: 0 15px 0 15px; padding: 10px; border-radius: 10px 10px 0 0;"><strong>Chat Log: ${(i+1)} </strong></div>`);
+         var obj = arr.cases[i];
+         for (var key in obj){
+           var value = obj[key];
+           var capitalFirst = key[0].toUpperCase();
+           if(key.toString().toLowerCase().includes("transcripts") || key.toString().toLowerCase().includes("javascript_variables") || key.toString().toLowerCase().includes("labels" ) || key.toString().toLowerCase().includes("operator_variables" )) {
+             document.write(`<div style="font-family: arial; background-color: #e6edf7; margin: 0 15px 0 15px; padding: 10px;"> * <strong>${capitalFirst + key.replaceAll("_", " ").substring(1, key.length)}</strong>: ${JSON.stringify(value)}</div>`);
+           } else {
+            document.write(`<div style="font-family: arial; background-color: #e6edf7; margin: 0 15px 0 15px; padding: 10px;"> * <strong>${capitalFirst + key.replaceAll("_", " ").substring(1, key.length)}</strong>: ${value}</div>`);
+           }
+         }
       }
    }
+   
 } 
 
 // functions below are for exporting content to a CSV file
