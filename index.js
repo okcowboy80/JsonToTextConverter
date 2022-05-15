@@ -111,8 +111,15 @@ function convertToCSV(objArray) {
        var line = '';
        for (var index in array.cases[i]) {
            if (line != '') line += ','
-           line += "\n" + "*" + index + ","; 
-           line += array.cases[i][index].toString().replaceAll(',', ' ').replaceAll('\n', ' ');      
+               line += "\n" + "*" + index + ","; 
+           if(typeof array.cases[i][index] === 'object') {
+               for(var nextIndex in array.cases[i][index]) {
+                  line += JSON.stringify(array.cases[i][index][nextIndex]).toString().replaceAll(',', ' ').replaceAll('\n', ' ');
+               }
+           } else {
+               line += array.cases[i][index].toString().replaceAll(',', ' ').replaceAll('\n', ' ');
+           }
+            
        }
 
        str += line + '\r\n';
