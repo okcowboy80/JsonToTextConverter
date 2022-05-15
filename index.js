@@ -3,6 +3,10 @@ document.getElementById("convertBtn").addEventListener("click", function() {
    clickHandler();
 });
 
+document.getElementById("exportCSV").addEventListener("click", function() {
+   exportHandler();
+});
+
 function clickHandler() {
    const selectedFile = document.getElementById('jsonFile').files[0];
    if (selectedFile) {
@@ -10,14 +14,66 @@ function clickHandler() {
          fileread.onload = function(e) {
             var content = e.target.result;
             var parsed = JSON.parse(content); 
-            //console.log(intern); 
             displayContents(parsed);
        };
        fileread.readAsText(selectedFile);
 
-   } else {
+   } else if(document.getElementById("textarea").value) {
       const text = JSON.parse(document.getElementById("textarea").value)
       displayContents(text);
+   } else {
+
+      const text = document.getElementById("urlText").value
+      console.log(text)
+      fetch(text, requestOptions)
+       .then((response) => {
+          console.log(response)
+          displayContents(response)
+         })
+       .catch((err => {
+          document.write(`The URL returned an error: ${err}`)
+       }))
+   }
+   
+}
+
+function exportHandler() {
+
+   const date = new Date();
+   const day = date.getDate();
+   const month = date.getMonth() + 1;
+   const year = date.getFullYear();
+
+   const selectedFile = document.getElementById('jsonFile').files[0];
+   if (selectedFile) {
+         var fileread = new FileReader();
+         fileread.onload = function(e) {
+            var content = e.target.result;
+            var parsed = JSON.parse(content); 
+            displayContents(parsed);
+            exportCSVFile(parsed, `Chat_Logs_${month}-${day}-${year}`);
+
+       };
+       fileread.readAsText(selectedFile);
+
+   } else if(document.getElementById("textarea").value) {
+      const text = JSON.parse(document.getElementById("textarea").value)
+      displayContents(text);
+      exportCSVFile(text, `Chat_Logs_${month}-${day}-${year}`);
+   } else {
+
+      const text = document.getElementById("urlText").value
+      console.log(text)
+      fetch(text, requestOptions)
+       .then((response) => {
+          console.log(response)
+         displayContents(response)
+         exportCSVFile(response, `Chat_Logs_${month}-${day}-${year}`);
+          response.headers.set(AccessControlAllowOrigin)
+         })
+       .catch((err => {
+          document.write(`The URL returned an error: ${err}`)
+       }))
    }
    
 }
@@ -44,6 +100,51 @@ function displayContents(arr) {
       }
    }
 } 
+
+// functions below are for exporting content to a CSV file
+
+function convertToCSV(objArray) {
+   var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+   var str = '';
+   //console.log(array.cases.length)
+   for (var i = 0; i < array.cases.length; i++) {
+       var line = '';
+       for (var index in array.cases[i]) {
+           if (line != '') line += ','
+           line += "\n" + "*" + index + ","; 
+           line += array.cases[i][index].toString().replaceAll(',', ' ').replaceAll('\n', ' ');      
+       }
+
+       str += line + '\r\n';
+   }
+   return str;
+}
+
+async function exportCSVFile(items, fileTitle) {
+
+   // Convert Object to JSON
+   var jsonObject = JSON.stringify(items);
+
+   var csv = await this.convertToCSV(jsonObject);
+
+   var exportedFilename = fileTitle + '.csv' || 'export.csv';
+
+   var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+   if (navigator.msSaveBlob) { // IE 10+
+       navigator.msSaveBlob(blob, exportedFilename);
+   } else {
+       var link = document.createElement("a");
+       if (link.download !== undefined) { 
+           var url = URL.createObjectURL(blob);
+           link.setAttribute("href", url);
+           link.setAttribute("download", exportedFilename);
+           link.style.visibility = 'hidden';
+           document.body.appendChild(link);
+           link.click();
+           document.body.removeChild(link);
+       }
+   }
+}
 
 
 
