@@ -127,14 +127,22 @@ function convertToCSV(objArray) {
    for (var i = 0; i < array.cases.length; i++) {
        var line = '';
        for (var index in array.cases[i]) {
-           if (line != '') line += ','
+           if (line != '') 
+               line += ','
                line += "\n" + "*" + index + ","; 
            if(typeof array.cases[i][index] === 'object') {
                for(var nextIndex in array.cases[i][index]) {
                   line += JSON.stringify(array.cases[i][index][nextIndex]).toString().replaceAll(',', ' ').replaceAll('\n', ' ');
                }
            } else {
-               line += array.cases[i][index].toString().replaceAll(',', ' ').replaceAll('\n', ' ');
+               if(index.toString() === 'created_at_date') {
+                  var date = new Date(array.cases[i][index]);
+                  var fdate = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear()
+                  line += fdate.toString();
+               } else {
+                  line += array.cases[i][index].toString().replaceAll(',', ' ').replaceAll('\n', ' ');
+               }
+               
            }
             
        }
