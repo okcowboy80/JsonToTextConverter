@@ -98,7 +98,19 @@ function displayContents(arr) {
            if(key.toString().toLowerCase().includes("transcripts") || key.toString().toLowerCase().includes("javascript_variables") || key.toString().toLowerCase().includes("labels" ) || key.toString().toLowerCase().includes("operator_variables" )) {
              document.write(`<div style="font-family: arial; background-color: #e6edf7; margin: 0 15px 0 15px; padding: 10px;"> * <strong>${capitalFirst + key.replaceAll("_", " ").substring(1, key.length)}</strong>: ${JSON.stringify(value)}</div>`);
            } else {
-            document.write(`<div style="font-family: arial; background-color: #e6edf7; margin: 0 15px 0 15px; padding: 10px;"> * <strong>${capitalFirst + key.replaceAll("_", " ").substring(1, key.length)}</strong>: ${value}</div>`);
+              if(key.toString() === "created_at_date") {
+               var date = new Date(value);
+
+               //var fdate = date.getFullYear() + '/' + ("0" + (date.getMonth() + 1)).slice(-2) + '/' + ("0" + date.getDate()).slice(-2);
+               var fdate = date.getMonth() + 1 + '/' + date.getDate() + '/' + date.getFullYear()
+               var newDate = new Date(value).toISOString().substr(0, 10).replace(/-/g, '/');
+               //console.log(fdate)
+               document.write(`<div style="font-family: arial; background-color: #e6edf7; margin: 0 15px 0 15px; padding: 10px;"> * <strong>${capitalFirst + key.replaceAll("_", " ").substring(1, key.length)}</strong>: ${fdate}</div>`);
+               
+              } else {
+                  document.write(`<div style="font-family: arial; background-color: #e6edf7; margin: 0 15px 0 15px; padding: 10px;"> * <strong>${capitalFirst + key.replaceAll("_", " ").substring(1, key.length)}</strong>: ${value}</div>`);
+              }
+            
            }
          }
       }
